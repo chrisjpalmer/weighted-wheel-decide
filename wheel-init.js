@@ -183,6 +183,7 @@ function wheelMouseDown(e) {
 
 function drawRouletteWheel() {
   var canvas = document.getElementById("wheelcanvas");
+  WHEEL.choicesMap = {}
   if (canvas.getContext) {
     ctx = canvas.getContext("2d");
     ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -226,7 +227,7 @@ function drawRouletteWheel() {
       );
       ctx.rotate(angHalfArc + Math.PI);
       var text = WHEEL.choices[i];
-
+      WHEEL.choicesMap[text] = {startAngle:angle, endAngle: endAngle};
       ctx.font = "bold " + choiceTextSize[i] + "px sans-serif";
 
       textHWidth = ctx.measureText(text).width;
@@ -240,6 +241,7 @@ function drawRouletteWheel() {
     }
 
     drawArrow();
+    console.log(WHEEL.choicesMap)
   }
 }
 
@@ -284,6 +286,16 @@ function setChoiceFontSizes() {
       }
     }
   }
+}
+
+function normalizeAngle(ang) {
+  return ang % (Math.PI*2)
+}
+
+function choiceAngle(ang) {
+  // map the angle to where it is regarding the choice
+  // that the left hand marker points to
+  return 2*Math.PI - (normalizeAngle(ang + Math.PI))
 }
 
 function stopRotateWheelImage() {

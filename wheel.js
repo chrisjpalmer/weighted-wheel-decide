@@ -137,40 +137,7 @@ function toggleMute(button) {
   }
 }
 
-function addTouchEventListeners() {
-  return;
-  var wheeldiv = document.getElementById("wheelcanvastop");
-  wheeldiv.addEventListener(
-    "touchmove",
-    function (e) {
-      e.preventDefault();
-      var touch = e.touches[0];
-      wheelMouseMove2(touch.pageX, touch.pageY);
-    },
-    false
-  );
 
-  wheeldiv.addEventListener(
-    "touchstart",
-    function (e) {
-      e.preventDefault();
-      var touch = e.touches[0];
-      wheelMouseDown(touch);
-    },
-    false
-  );
-
-  wheeldiv.addEventListener(
-    "touchend",
-    function (e) {
-      e.preventDefault();
-      var touch = e.touches[0];
-      wheelMouseUp(touch);
-      spin();
-    },
-    false
-  );
-}
 
 function clearTopCanvas() {
   var canvasTop = document.getElementById("wheelcanvastop");
@@ -230,6 +197,7 @@ var isFirstSpinCycle = false;
 var isOddNumberOfChoices = false;
 var lastChoiceBeepedFor = -1;
 function rotateWheelImage() {
+
   spinTime += 30;
   if (spinTime >= spinTimeTotal) {
     if(WHEEL.choices.includes(WHEEL.choiceTarget)) {
@@ -239,6 +207,11 @@ function rotateWheelImage() {
     }
     return;
   }
+
+  // some logs:
+  // var targetAngles = WHEEL.choicesMap[getCurrentChoiceWithWeights().text]
+  // console.log("current", choiceAngle(startAngle), "target", targetAngles.startAngle)
+
   var spinAngle =
     spinAngleStart - easeOut(spinTime, 0, spinAngleStart, spinTimeTotal);
   var spinAngleRad = (spinAngle * Math.PI) / 180;
@@ -255,13 +228,18 @@ function rotateWheelImage() {
 
 function rotateToTarget(target) {
   spinTime += 30;
-  console.log("current choice", getCurrentChoiceWithWeights())
-  if (target == getCurrentChoiceWithWeights().text) {
+  var targetAngles = WHEEL.choicesMap[target]
+
+  var arcLength = (targetAngles.endAngle - targetAngles.startAngle);
+  var offset = Math.random() * arcLength;
+  var desired = targetAngles.startAngle + offset;
+  
+  var cur = choiceAngle(startAngle);
+  if (Math.abs(desired - cur) < 0.1) {
     stopRotateWheelImage();
     return;
   }
-  // var spinAngle =
-  //   spinAngleStart - easeOut(spinTime, 0, spinAngleStart, spinTimeTotal);
+  
   var spinAngle = 2;
   var spinAngleRad = (spinAngle * Math.PI) / 180;
   startAngle += spinAngleRad;
