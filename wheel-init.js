@@ -7,7 +7,7 @@
         );
       }); */
 
-var WHEEL = {};
+var WHEEL = { tbId: 0 };
 var defaultColors = ["#B8D430", "#3AB745", "#029990", "#9999ff",
   "#d59aff", "#ff9ab3", "#ffaf9a", "#F80120",
   "#F35B20", "#FB9A00", "#FFCC00", "#FEF200",
@@ -67,7 +67,6 @@ function putSettings(choices, colors) {
   // clear the box
   var txtChoices = document.getElementById("txtChoices");
   txtChoices.innerHTML = "";
-  WHEEL.tbId = 0;
   
   for (var i = 0; i < choices.length; i++) {
     addElement(choices[i]);
@@ -94,7 +93,7 @@ function initWheel() {
 }
 
 function setWheelChoices(choices, colors, clickToSpin) {
-  WHEEL = { canv: WHEEL.canv, canvTop: WHEEL.canvTop, wheelSize: WHEEL.wheelSize, choiceTarget: WHEEL.choiceTarget };
+  WHEEL = { canv: WHEEL.canv, canvTop: WHEEL.canvTop, wheelSize: WHEEL.wheelSize, choiceTarget: WHEEL.choiceTarget, tbId: WHEEL.tbId };
   WHEEL.choices = choices;
   WHEEL.colors = colors;
   WHEEL.numcolors = colors.length;
