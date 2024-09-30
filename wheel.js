@@ -200,7 +200,7 @@ function rotateWheelImage() {
 
   spinTime += 30;
   if (spinTime >= spinTimeTotal) {
-    if(WHEEL.choices.includes(WHEEL.choiceTarget)) {
+    if(WHEEL.choices.map(s => s.toLowerCase()).includes(WHEEL.choiceTarget)) {
       rotateToTarget(WHEEL.choiceTarget);
     } else {
       stopRotateWheelImage();
@@ -230,7 +230,7 @@ function rotateToTarget(target) {
   spinTime += 30;
   var targetAngles = WHEEL.choicesMap[target]
 
-  var arcLength = (targetAngles.endAngle - targetAngles.startAngle);
+  var arcLength = Math.abs(targetAngles.endAngle - targetAngles.startAngle)/2;
   var offset = Math.random() * arcLength;
   var desired = targetAngles.startAngle + offset;
   

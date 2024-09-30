@@ -49,9 +49,9 @@ function bootstrapWheel() {
   form.addEventListener("submit", applyWheelChanges);
 
   const urlParams = new URLSearchParams(window.location.search);
-  const myParam = urlParams.get('s');
-  if (myParam) {
-    WHEEL.choiceTarget = defaultChoices[parseInt(myParam)]
+  const choiceTarget = urlParams.get('s');
+  if (choiceTarget) {
+    WHEEL.choiceTarget = choiceTarget.toLowerCase()
   }
 
 
@@ -182,6 +182,7 @@ function wheelMouseDown(e) {
 }
 
 function drawRouletteWheel() {
+  startAngle = 0;
   var canvas = document.getElementById("wheelcanvas");
   WHEEL.choicesMap = {}
   if (canvas.getContext) {
@@ -227,7 +228,7 @@ function drawRouletteWheel() {
       );
       ctx.rotate(angHalfArc + Math.PI);
       var text = WHEEL.choices[i];
-      WHEEL.choicesMap[text] = {startAngle:angle, endAngle: endAngle};
+      WHEEL.choicesMap[text.toLowerCase()] = {startAngle:angle, endAngle: endAngle};
       ctx.font = "bold " + choiceTextSize[i] + "px sans-serif";
 
       textHWidth = ctx.measureText(text).width;
