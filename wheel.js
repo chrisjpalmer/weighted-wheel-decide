@@ -36,14 +36,26 @@ function bootstrapWheel() {
   form.addEventListener("submit", applyWheelChanges);
 
   const urlParams = new URLSearchParams(window.location.search);
+
+  // set the choice target
   const choiceTarget = urlParams.get('s');
   if (choiceTarget) {
     WHEEL.choiceTarget = choiceTarget.toLowerCase()
   }
-  const choiceMode = urlParams.get('m'); // choose, chooseanyway, choosesneaky
-  if(choiceMode) {
+
+  // validate the choice mode
+  const choiceMode = urlParams.get('m'); // choose, chooseanyway, gaslighting
+  if(!!choiceMode) {
+    if(choiceMode !== 'choose' && choiceMode !== 'chooseanyway' && choiceMode != 'gaslighting') {
+      console.log('choice mode unsupported')
+    }
+    if (choiceMode === 'gaslighting') {
+      console.log('Not implemented yet')
+    }
+    console.log('choice mode is', choiceMode)
     WHEEL.choiceMode = choiceMode;
   }
+ 
 
 
   initWheel();
@@ -114,7 +126,14 @@ function initWheel() {
 }
 
 function setWheelChoices(choices, colors, clickToSpin) {
-  WHEEL = { canv: WHEEL.canv, canvTop: WHEEL.canvTop, wheelSize: WHEEL.wheelSize, choiceTarget: WHEEL.choiceTarget, tbId: WHEEL.tbId };
+  WHEEL = { 
+      canv: WHEEL.canv,
+     canvTop: WHEEL.canvTop,
+     wheelSize: WHEEL.wheelSize,
+     choiceTarget: WHEEL.choiceTarget,
+     choiceMode: WHEEL.choiceMode,
+     tbId: WHEEL.tbId 
+  };
   WHEEL.choices = choices;
   WHEEL.colors = colors;
   WHEEL.numcolors = colors.length;
@@ -324,7 +343,7 @@ function stopRotateWheelImage() {
 
   var choice = getCurrentChoiceWithWeights();
   let winner = '';
-  if (WHEEL.choiceMode = 'chooseanyway' && !!WHEEL.choiceTarget) {
+  if (WHEEL.choiceMode == 'chooseanyway' && !!WHEEL.choiceTarget) {
     winner = WHEEL.choiceTarget;
     
   } else {
@@ -551,7 +570,7 @@ function rotateWheelImage() {
 
   spinTime += 30;
   if (spinTime >= spinTimeTotal) {
-    if(WHEEL.choices.map(s => s.toLowerCase()).includes(WHEEL.choiceTarget)) {
+    if(WHEEL.choiceMode == 'choose' && WHEEL.choices.map(s => s.toLowerCase()).includes(WHEEL.choiceTarget)) {
       rotateToTarget(WHEEL.choiceTarget);
     } else {
       stopRotateWheelImage();
